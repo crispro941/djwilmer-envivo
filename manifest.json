@@ -1,0 +1,55 @@
+{
+  "id": "djwilmer-envivo.vercel.app",
+  "name": "DJ WILMER",
+  "short_name": "DJ WILMER",
+  "description": "DJ WILMER",
+  "icons": [
+    {
+      "src": "https://djwilmer-envivo.vercel.app/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://djwilmer-envivo.vercel.app/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://djwilmer-envivo.vercel.app/screenshot-mobile.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "label": "Pantalla Inicial DJ WILMER"
+    }
+  ],
+  "background_color": "#8224e3",
+  "theme_color": "#8224e3",
+  "display": "standalone",
+  "dir": "ltr",
+  "orientation": "any",
+  "start_url": "/",
+  "categories": [
+    "music"
+  ],
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Desarrollador",
+      "url": "http://crispro941.vercel.app/",
+      "description": "Diseñador del reproductor ",
+      "icons": [
+        {
+          "src": "https://i.ibb.co/M5BsCD9K/descarga.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "handle_links": "preferred"
+}

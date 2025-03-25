@@ -87,33 +87,7 @@
             <audio id="audio-player"></audio>
         </div>
     </div>
-<button id="installBtn" style="display:none; padding: 10px 20px; background: #ffcc00; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
-    📲 Instalar DJ WILMER
-</button>
 
-<script>
-    let deferredPrompt;
-
-    window.addEventListener("beforeinstallprompt", (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        document.getElementById("installBtn").style.display = "block";
-    });
-
-    document.getElementById("installBtn").addEventListener("click", () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === "accepted") {
-                    console.log("✅ Usuario aceptó la instalación");
-                } else {
-                    console.log("❌ Usuario canceló la instalación");
-                }
-                deferredPrompt = null;
-            });
-        }
-    });
-</script>
     <script>
         // 🎵 VARIABLES CONFIGURABLES 🎵
         const config = {

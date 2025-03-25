@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ WILMER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Barra de volumen */
+        .volume-bar {
+            width: 100px;
+            height: 6px;
+            background: gray;
+            border-radius: 3px;
+            position: relative;
+        }
+        .volume-level {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-black text-white flex justify-center items-center min-h-screen">
+
+    <div class="relative w-full h-screen flex flex-col justify-between">
+        <!-- Imagen de fondo -->
+        <div class="absolute inset-0">
+            <img id="background-img" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+        </div>
+
+        <!-- LOGO -->
+        <div class="relative flex justify-center mt-6">
+            <img id="radio-logo" class="w-40 h-40 rounded-full shadow-lg">
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="relative text-center px-6">
+            <span class="bg-red-600 text-xs px-3 py-1 rounded font-bold">🔴 EN DIRECTTO</span>
+            <h1 id="radio-name" class="text-4xl font-extrabold mt-3 leading-tight uppercase"></h1>
+            <p id="live-text" class="text-gray-400 text-sm mt-1"></p>
+        </div>
+
+        <!-- Redes Sociales -->
+        <div id="social-links" class="relative flex justify-center space-x-6 mb-6"></div>
+
+        <!-- Reproductor de Música -->
+        <div class="relative w-full bg-black/80 text-white flex flex-col items-center p-4">
+            <img id="album-cover" class="w-20 h-20 rounded-lg">
+
+            <div class="text-center mt-3">
+                <p id="now-playing-text" class="text-xs text-gray-400"></p>
+                <p id="song-title" class="text-lg font-bold"></p>
+                <p class="text-xs text-gray-400">Éxitos Siempre / <span id="radio-name-small"></span></p>
+            </div>
+
+            <!-- 🚀 NUEVA BARRA DE ESTADO -->
+            <p id="status-text" class="text-sm font-bold mt-2">⏸️ Pausado</p>
+
+            <!-- Controles -->
+            <div class="flex items-center justify-center space-x-4 mt-4">
+                <button id="volume-down" class="text-2xl"><i class="fas fa-volume-down"></i></button>
+                
+                <!-- 🔊 NUEVO: Barra de volumen -->
+                <div class="volume-bar">
+                    <div id="volume-level" class="volume-level"></div>
+                </div>
+                
+                <button id="volume-up" class="text-2xl"><i class="fas fa-volume-up"></i></button>
+            </div>
+
+            <button id="play-pause" class="text-3xl mt-3"><i class="fas fa-play"></i></button>
+
+            <!-- Audio -->
+            <audio id="audio-player"></audio>
+        </div>
+    </div>
+
+    <script>
+        // 🎵 VARIABLES CONFIGURABLES 🎵
+        const config = {
+            nombreRadio: "DJ WILMER",
+            logoURL: "https://djwilmer-pwa2.vercel.app/icon.png",
+            fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
+            streamURL: "https://stream.zeno.fm/wttrxavefwzuv",
+            cancionActual: "DJ WILMER",
+            albumCover: "https://djwilmer-pwa2.vercel.app/icon.png",
+            textoEmitiendo: "Transmitiendo en vivo desde nuestra estación 🎙️",
+            textoSonandoAhora: "Actualmente en reproducción 🎶",
+            redesSociales: [
+                { url: "https://web.facebook.com/DJCHOCHOBARWILMER", icon: "fab fa-facebook" },
+                { url: "https://www.instagram.com/wilmerdelgadocieza/", icon: "fab fa-instagram" },
+                { url: "https://www.youtube.com/DJCHOCHOBARWILMER", icon: "fab fa-youtube" },
+                { url: "https://api.whatsapp.com/send/?phone=51984335569&text&type=phone_number&app_absent=0", icon: "fab fa-whatsapp" }
+            ]
+        };
+
+        // 🎨 ACTUALIZAR ELEMENTOS CON VARIABLES
+        document.getElementById('radio-name').innerText = config.nombreRadio;
+        document.getElementById('radio-name-small').innerText = config.nombreRadio;
+        document.getElementById('radio-logo').src = config.logoURL;
+        document.getElementById('background-img').src = config.fondoURL;
+        document.getElementById('song-title').innerText = config.cancionActual;
+        document.getElementById('album-cover').src = config.albumCover;
+        document.getElementById('audio-player').src = config.streamURL;
+        document.getElementById('live-text').innerText = config.textoEmitiendo;
+        document.getElementById('now-playing-text').innerText = config.textoSonandoAhora;
+
+        // 🎯 AGREGAR REDES SOCIALES AUTOMÁTICAMENTE
+        const socialContainer = document.getElementById('social-links');
+        config.redesSociales.forEach(({ url, icon }) => {
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = "_blank";
+            link.classList.add("text-white", "text-3xl");
+            link.innerHTML = `<i class="${icon}"></i>`;
+            socialContainer.appendChild(link);
+        });
+
+        // 🎵 CONTROLES DEL REPRODUCTOR
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const volumeLevel = document.getElementById('volume-level');
+        const statusText = document.getElementById('status-text');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+                statusText.innerText = "🔊 Reproduciendo";
+            } else {
+                audioPlayer.pause();
+                playPauseBtn.innerHTML = `<i class="fas fa-play"></i>`;
+                statusText.innerText = "⏸️ Pausado";
+            }
+        });
+
+        document.getElementById('volume-up').addEventListener('click', () => {
+            if (audioPlayer.volume < 1) audioPlayer.volume += 0.1;
+            volumeLevel.style.width = (audioPlayer.volume * 100) + "%";
+        });
+
+        document.getElementById('volume-down').addEventListener('click', () => {
+            if (audioPlayer.volume > 0) audioPlayer.volume -= 0.1;
+            volumeLevel.style.width = (audioPlayer.volume * 100) + "%";
+        });
+    </script>
+
+</body>
+</html>

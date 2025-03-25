@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DJ WILMER</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+
+<link rel="manifest" href="manifest.json">
+<script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./service-worker.js")
+            .then(() => console.log("✅ Service Worker registrado"))
+            .catch(error => console.log("❌ Error en el registro del Service Worker:", error));
+    }
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -77,7 +87,33 @@
             <audio id="audio-player"></audio>
         </div>
     </div>
+<button id="installBtn" style="display:none; padding: 10px 20px; background: #ffcc00; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+    📲 Instalar DJ WILMER
+</button>
 
+<script>
+    let deferredPrompt;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        document.getElementById("installBtn").style.display = "block";
+    });
+
+    document.getElementById("installBtn").addEventListener("click", () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === "accepted") {
+                    console.log("✅ Usuario aceptó la instalación");
+                } else {
+                    console.log("❌ Usuario canceló la instalación");
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
+</script>
     <script>
         // 🎵 VARIABLES CONFIGURABLES 🎵
         const config = {

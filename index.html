@@ -54,7 +54,33 @@
             <h1 id="radio-name" class="text-4xl font-extrabold mt-3 leading-tight uppercase"></h1>
             <p id="live-text" class="text-gray-400 text-sm mt-1"></p>
         </div>
+<button id="installBtn" style="display:none; padding: 10px 20px; background: #ffcc00; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+    📲 Instalar DJ WILMER
+</button>
 
+<script>
+    let deferredPrompt;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        document.getElementById("installBtn").style.display = "block";
+    });
+
+    document.getElementById("installBtn").addEventListener("click", () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === "accepted") {
+                    console.log("✅ Usuario aceptó la instalación");
+                } else {
+                    console.log("❌ Usuario canceló la instalación");
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
+</script>
         <!-- Redes Sociales -->
         <div id="social-links" class="relative flex justify-center space-x-6 mb-6"></div>
 
